@@ -60,5 +60,5 @@ exports.User = User;
 TODO:
 	- Use Joi for validation
 	- Think of some static/instance methods to spice it up
-	- Work out cartId problem dumbass
+	- Work out cartId problem dumbass(self harshness not allowed in this work environment)
 */
