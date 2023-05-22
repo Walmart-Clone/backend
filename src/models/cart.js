@@ -45,7 +45,7 @@ exports.Cart = Cart;
 
 /*
 TODO:
-	- Use Joi for validation
+	- Use Joi for validation -- would you humbly explain this?
 	- Think of some static/instance methods to spice it up
 		- Discount percentage-to-price conversion
 */
