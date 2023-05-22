@@ -11,7 +11,7 @@ const sellerSchema = new mongoose.Schema({
     {
       product: {
         id: {
-          type: mongoose.Schema.Types.ObjectId,
+          type: mongoose.Schema.ObjectId,
           required: true,
         },
         name: {

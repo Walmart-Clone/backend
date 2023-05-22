@@ -34,12 +34,12 @@ const productSchema = new mongoose.Schema({
   },
   seller: {
     id: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: mongoose.Schema.ObjectId,
       required: true,
     },
     name: {
       type: String,
-      required: True,
+      required: true,
       minLength: 5,
       maxLength: 255,
     },

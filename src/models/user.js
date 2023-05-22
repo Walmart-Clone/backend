@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
+    lowercase: true,
     minlength: 3,
     maxlength: 255,
   },
@@ -44,8 +45,9 @@ const userSchema = new mongoose.Schema({
     enum: ["customer", "seller"],
   },
   cartId: {
-    type: mongoose.Schema.Types.ObjectId,
-    // default: null,
+    type: mongoose.Schema.ObjectId,
+    required: false,
+    default: null,
     // unique: true,
     // -> (default: null && unique: true) is not possible
     // ref: "Cart",
@@ -59,6 +61,8 @@ exports.User = User;
 /*
 TODO:
 	- Use Joi for validation
+    - Check if some properties are alpha/alphanumeric/has-everything
+    - Rely on Joi validation instead of Mongoose enums on every collection
 	- Think of some static/instance methods to spice it up
-	- Work out cartId problem dumbass
+	- Work out cartId problem goodman
 */
