@@ -3,11 +3,18 @@ const mongoose = require("mongoose");
 const asyncWrapper = require("../middlewares/async");
 const { User } = require("../models/user");
 
-// GET /
+// GET all users /
 const getAllUsers = asyncWrapper(async (req, res) => {
   const users = await User.find().sort({ name: 1 });
 
   return res.status(200).send(users);
+});
+
+// GET all customers /
+const getAllCustomers = asyncWrapper(async (req, res) => {
+  const customers = await User.find({role: "customer"}).sort({ name: 1 });
+
+  return res.status(200).send(customers);
 });
 
 // GET /id
@@ -68,6 +75,7 @@ const deleteUser = asyncWrapper(async (req, res) => {
 
 module.exports = {
   getAllUsers,
+  getAllCustomers,
   getUser,
   addUser,
   updateUser,

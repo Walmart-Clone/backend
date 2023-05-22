@@ -2,6 +2,7 @@ const express = require("express");
 
 const {
   getAllUsers,
+  getAllCustomers,
   getUser,
   addUser,
   updateUser,
@@ -10,11 +11,13 @@ const {
 
 const router = express.Router();
 
-router.get("/", getAllUsers);
+router.get("/users", getAllUsers);
+
+router.get("/customers", getAllCustomers);
 
 router.get("/:id", getUser);
 
-router.post("/", addUser);
+router.post("/addU", addUser);
 
 router.put("/:id", updateUser);
 
