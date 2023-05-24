@@ -41,20 +41,21 @@ const getMe = asyncWrapper(async (req, res) => {
 // POST /
 const addUser = asyncWrapper(async (req, res) => {
   let user = await User.findOne({ email: req.body.email });
-
+  console.log(user)
   if (user) return res.status(400).send("User already registered.");
 
   const { username, email, password, name, age, gender, role } = req.body;
 
   user = { username, email, password, name, age, gender, role };
+  console.log(user)
 
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(user.password, salt);
 
-  await User.create(user);
-
+  user = await User.create(user);
+  console.log(user)
   const token = user.generateAuthToken();
-
+  console.log(token)
   return res
     .header("x-auth-token", token)
     .send(
