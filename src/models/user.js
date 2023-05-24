@@ -68,9 +68,9 @@ userSchema.methods.generateAuthToken = function () {
     },
     "myLittlePony"
   );
+
   return token;
 };
-// config.get("jwtPrivateKey")
 
 const validateUser = (user) => {
   const schema = Joi.object({

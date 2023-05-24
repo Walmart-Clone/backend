@@ -46,19 +46,27 @@ const addUser = asyncWrapper(async (req, res) => {
 
   const { username, email, password, name, age, gender, role } = req.body;
 
-  user = { username, email, password, name, age, gender, role };
+  user = new User({ username, email, password, name, age, gender, role });
 
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(user.password, salt);
 
-  await User.create(user);
+  await user.save();
 
   const token = user.generateAuthToken();
 
   return res
     .header("x-auth-token", token)
     .send(
-      _.pick(user, ["id", "username", "email", "name", "age", "gender", "role"])
+      _.pick(user, [
+        "_id",
+        "username",
+        "email",
+        "name",
+        "age",
+        "gender",
+        "role",
+      ])
     );
 });
 
