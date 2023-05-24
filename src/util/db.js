@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 
 const connectDB = async () => {
   try {
-    const db = `mongodb://localhost/walmart`;
+    const db = `mongodb+srv://ahmadmashaal01:ahmad123@cluster.iboc46f.mongodb.net/`;
     // const db = config.get("MONGO_URL");
 
     await mongoose.connect(db);
