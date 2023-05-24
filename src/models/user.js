@@ -66,7 +66,7 @@ userSchema.methods.generateAuthToken = function () {
       name: this.name,
       email: this.email,
     },
-    "myLittlePony"
+    process.env.jwtPrivateKey
   );
 
   return token;
