@@ -4,7 +4,7 @@ Joi.objectId = require("joi-objectid")(Joi);
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 
-const { Cart } = require("./cart");
+const { Product } = require("./product");
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -51,23 +51,25 @@ const userSchema = new mongoose.Schema({
     default: "customer",
     enum: ["customer", "seller"],
   },
-  cartId: {
-    type: mongoose.Schema.ObjectId,
-    required: false,
-    default: null,
-    ref: "Cart",
-  },
+  cart: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: "Product",
+    },
+  ],
 });
 
-userSchema.methods.generateAuthToken = () => {
+userSchema.methods.generateAuthToken = function () {
   const token = jwt.sign(
     {
       _id: this._id,
       name: this.name,
       email: this.email,
     },
-    config.get("jwtPrivateKey")
+    "myLittlePony"
   );
+
+  return token;
 };
 
 const validateUser = (user) => {
@@ -82,7 +84,7 @@ const validateUser = (user) => {
       .valid("customer", "seller")
       .required()
       .default("customer"),
-    cartId: Joi.objectId().required().default(null),
+    cart: Joi.array().items(Joi.objectId()).default([]),
   });
 
   return schema.validate(user);
