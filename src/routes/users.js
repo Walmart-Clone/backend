@@ -7,7 +7,7 @@ const validate = require("../middlewares/validate");
 
 const {
   getMe,
-  // getAllUsers,
+  getAllUsers,
   // getAllCustomers,
   // getUser,
   addUser,
@@ -16,6 +16,8 @@ const {
 } = require("../controllers/users");
 
 const router = express.Router();
+
+router.get("/", getAllUsers);
 
 router.get("/me", [authenticate], getMe);
 

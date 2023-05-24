@@ -7,13 +7,14 @@ const { User } = require("../models/user");
 
 // No admin yet -> no getUser/getAllUsers/getAllCustomers
 //
-// // GET all users /
-// const getAllUsers = asyncWrapper(async (req, res) => {
-//   const users = await User.find().sort({ name: 1 });
+// GET all users /
+const getAllUsers = asyncWrapper(async (req, res) => {
+  const users = await User.find().sort({ name: 1 });
 
-//   return res.status(200).send(users);
-// });
-// // GET all customers /
+  return res.status(200).send(users);
+});
+
+// GET all customers /
 // const getAllCustomers = asyncWrapper(async (req, res) => {
 //   const customers = await User.find({ role: "customer" }).sort({ name: 1 });
 
@@ -43,24 +44,16 @@ const addUser = asyncWrapper(async (req, res) => {
 
   if (user) return res.status(400).send("User already registered.");
 
-  user = new User(
-    _.pick(req.body, [
-      "username",
-      "email",
-      "password",
-      "name",
-      "age",
-      "gender",
-      "role",
-    ])
-  );
+  const { username, email, password, name, age, gender, role } = req.body;
+
+  user = { username, email, password, name, age, gender, role };
 
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(user.password, salt);
 
-  await user.save();
+  await User.create(user);
 
-  const token = user.generateAuthToekn();
+  const token = user.generateAuthToken();
 
   return res
     .header("x-auth-token", token)
@@ -111,14 +104,10 @@ const deleteUser = asyncWrapper(async (req, res) => {
 
 module.exports = {
   getMe,
-  // getAllUsers,
+  getAllUsers,
   // getAllCustomers,
   // getUser,
   addUser,
   updateUser,
   deleteUser,
 };
-
-// TODO:
-// - add auth middleware to allow only admin to fetch all users data
-// - add cartId to various controllers
