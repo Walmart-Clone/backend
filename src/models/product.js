@@ -1,4 +1,8 @@
+const Joi = require("joi");
+Joi.objectId = require("joi-objectid")(Joi);
 const mongoose = require("mongoose");
+
+const { Seller } = require("./seller");
 
 const productSchema = new mongoose.Schema({
   name: {
@@ -8,7 +12,7 @@ const productSchema = new mongoose.Schema({
     minLength: 5,
     maxLength: 255,
   },
-  quantity: {
+  stock: {
     type: Number,
     required: true,
     min: 0,
@@ -32,27 +36,26 @@ const productSchema = new mongoose.Schema({
     minLength: 3,
     maxLength: 255,
   },
-  seller: {
-    id: {
-      type: mongoose.Schema.ObjectId,
-      required: true,
-    },
-    name: {
-      type: String,
-      required: true,
-      minLength: 5,
-      maxLength: 255,
-    },
+  sellerId: {
+    type: mongoose.Schema.ObjectId,
+    required: true,
+    ref: "Seller",
   },
 });
 
 const Product = mongoose.model("Product", productSchema);
 
-exports.Product = Product;
+const validateProduct = (product) => {
+  const schema = Joi.object({
+    name: Joi.string().required().min(5).max(255),
+    stock: Joi.number().required().min(0).default(1),
+    discount: Joi.number().min(0).max(100).default(0),
+    type: Joi.string().default("No type").min(3).max(255),
+    category: Joi.string().default("Uncategorized").min(3).max(255),
+    sellerId: Joi.objectId().required(),
+  });
 
-/*
-TODO:
-	- Enum a list of types and another for categories
-	- Use Joi for validation
-	- Think of some static/instance methods to spice it up
-*/
+  return schema.validate(product);
+};
+
+module.exports = { Product, validateProduct };
