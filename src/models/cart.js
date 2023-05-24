@@ -1,51 +1,54 @@
+const Joi = require("joi");
+Joi.objectId = require("joi-objectid")(Joi);
 const mongoose = require("mongoose");
+
+const { Product } = require("./product");
+const { User } = require("./user");
 
 const cartSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.ObjectId,
     required: true,
-    unique: true,
+    ref: "User",
   },
   items: [
     {
-      item: {
-        id: {
-          type: mongoose.Schema.ObjectId,
-          required: true,
-          unique: true,
-        },
-        name: {
-          type: String,
-          required: true,
-          unique: true,
-        },
-        price: {
-          type: Number,
-          required: true,
-        },
-        quantity: {
-          type: Number,
-          required: true,
-          min: 1,
-        },
-        discount: {
-          type: Number,
-          default: 0,
-          min: 0,
-          max: 100,
-        },
+      id: {
+        type: mongoose.Schema.ObjectId,
+        required: true,
+        ref: "Product",
+      },
+      quantityPurchased: {
+        type: Number,
+        required: true,
+        min: 1,
       },
     },
   ],
+  checkedout: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 });
 
 const Cart = mongoose.model("Cart", cartSchema);
 
-exports.Cart = Cart;
+const validateCart = (cart) => {
+  const schema = Joi.object({
+    userId: Joi.objectId().required(),
+    items: Joi.array()
+      .items(
+        joi.object({
+          id: Joi.objectId().required(),
+          quantityPurchased: Joi.number().min(1).required(),
+        })
+      )
+      .required(),
+    checkedout: Joi.boolean(),
+  });
 
-/*
-TODO:
-	- Use Joi for validation -- would you humbly explain this?
-	- Think of some static/instance methods to spice it up
-		- Discount percentage-to-price conversion
-*/
+  return schema.validate(cart);
+};
+
+module.exports = { Cart, validateCart };

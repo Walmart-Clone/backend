@@ -31,10 +31,28 @@
   - [ ] Keep enums intact, but make sure to force-validate each enum using Joi.validate()  
 
 
+- [ ] Middlewares: AuthN, AuthZ, Validate
+  - [x] Admin
+  - [x] AuthN
+  - [ ] AuthZ
+  - [x] Validate
+- [ ] Set up MongoDB Cluster on Atlas (Cloud)
+- [x] Add 'favorites' to User model **CANCELLED**
+- [ ] Referencing documents aka foreign keys in SQL
+  - [x] ONGOING
+- [x] Joi Validation
+- [ ] Seeding the database https://dummyjson.com/carts
+- [ ] Make Order and Cart basic CRUD controllers
+- [ ] Postman-test all controllers after successfully referencing
+- [ ] Connect both frontend and backend on one port
+- [x] Log with Morgan
+- [ ] Host on a cloud provider
+
+ُْEXTRA:
+- [ ] Swagger/JSDoc for API documentation
 
 
-
-
+---
 
 <!-- 
 # TODO.md format

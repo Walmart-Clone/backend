@@ -1,4 +1,10 @@
+const config = require("config");
+const Joi = require("joi");
+Joi.objectId = require("joi-objectid")(Joi);
+const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
+
+const { Cart } = require("./cart");
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -41,6 +47,7 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
+    required: true,
     default: "customer",
     enum: ["customer", "seller"],
   },
@@ -48,21 +55,39 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     required: false,
     default: null,
-    // unique: true,
-    // -> (default: null && unique: true) is not possible
-    // ref: "Cart",
+    ref: "Cart",
   },
 });
 
+userSchema.methods.generateAuthToken = () => {
+  const token = jwt.sign(
+    {
+      _id: this._id,
+      name: this.name,
+      email: this.email,
+    },
+    config.get("jwtPrivateKey")
+  );
+};
+
+const validateUser = (user) => {
+  const schema = Joi.object({
+    username: Joi.string().min(6).max(50).required(),
+    email: Joi.string().min(3).max(255).required().email(),
+    password: Joi.string().min(6).max(1024).required(),
+    name: Joi.string().min(5).max(50).required(),
+    age: Joi.number().min(6).max(100).required(),
+    gender: Joi.string().valid("male", "female").required(),
+    role: Joi.string()
+      .valid("customer", "seller")
+      .required()
+      .default("customer"),
+    cartId: Joi.objectId().required().default(null),
+  });
+
+  return schema.validate(user);
+};
+
 const User = mongoose.model("User", userSchema);
 
-exports.User = User;
-
-/*
-TODO:
-	- Use Joi for validation
-    - Check if some properties are alpha/alphanumeric/has-everything
-    - Rely on Joi validation instead of Mongoose enums on every collection
-	- Think of some static/instance methods to spice it up
-	- Work out cartId problem goodman
-*/
+module.exports = { User, validateUser };

@@ -1,9 +1,15 @@
 const express = require("express");
 
+const authenticate = require("../middlewares/authn");
+const authorize = require("../middlewares/authz");
+const { User, validateUser } = require("../models/user");
+const validate = require("../middlewares/validate");
+
 const {
-  getAllUsers,
-  getAllCustomers,
-  getUser,
+  getMe,
+  // getAllUsers,
+  // getAllCustomers,
+  // getUser,
   addUser,
   updateUser,
   deleteUser,
@@ -11,16 +17,14 @@ const {
 
 const router = express.Router();
 
-router.get("/users", getAllUsers);
+router.get("/me", [authenticate], getMe);
 
-router.get("/customers", getAllCustomers);
+router.post("/", validate(validateUser), addUser);
 
-router.get("/:id", getUser);
+router.put("/:id", [authenticate, validate(validateUser)], updateUser);
 
-router.post("/addU", addUser);
-
-router.put("/:id", updateUser);
-
-router.delete("/:id", deleteUser);
+router.delete("/:id", [authenticate], deleteUser);
 
 module.exports = router;
+
+// TODO: AUTH
